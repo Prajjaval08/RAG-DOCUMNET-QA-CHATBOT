@@ -226,6 +226,12 @@ class GeminiChatProvider:
                     body = json.loads(resp.read().decode("utf-8"))
                 break
             except urllib.error.HTTPError as exc:
+                # 429 (rate limit) and 503 (model overloaded) are
+                # transient: Google itself says spikes are usually
+                # temporary, so retry once instead of failing at once.
+                if exc.code in (429, 503) and attempt == 0:
+                    time.sleep(5)
+                    continue
                 raise ConnectionError(
                     f"Gemini request failed ({exc.code}). Check the model name "
                     f"and that the key has access to it. Original error: "

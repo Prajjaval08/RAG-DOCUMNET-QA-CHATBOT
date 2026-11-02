@@ -87,6 +87,30 @@ def test_gemini_retries_once_on_timeout_then_succeeds(monkeypatch):
     assert calls["n"] == 2
 
 
+def test_gemini_retries_once_on_503_then_succeeds(monkeypatch):
+    import io
+    import urllib.error
+
+    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+    calls = {"n": 0}
+
+    def flaky_urlopen(request, timeout=None):
+        calls["n"] += 1
+        if calls["n"] == 1:
+            body = b'{"error": {"code": 503, "message": "high demand"}}'
+            raise urllib.error.HTTPError(
+                request.full_url, 503, "Unavailable", {}, io.BytesIO(body)
+            )
+        return _fake_response(
+            {"candidates": [{"content": {"parts": [{"text": "ok"}]}}]}
+        )
+
+    monkeypatch.setattr("rag_chatbot.llm.urllib.request.urlopen", flaky_urlopen)
+    monkeypatch.setattr("rag_chatbot.llm.time.sleep", lambda _: None)
+    assert GeminiChatProvider("gemini-3.8-flash").generate("hi") == "ok"
+    assert calls["n"] == 2
+
+
 def test_gemini_timeout_twice_raises_clear_error(monkeypatch):
     monkeypatch.setenv("GEMINI_API_KEY", "test-key")
 
