@@ -1,0 +1,2 @@
+{"question": "What does the document say about cats?", "expected_sources": ["a.txt"], "expected_keywords": ["cats"]}
+{"question": "Where is Paris?", "expected_sources": ["b.txt"], "expected_keywords": ["France"]}

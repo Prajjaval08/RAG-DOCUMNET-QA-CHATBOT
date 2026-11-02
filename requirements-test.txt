@@ -1,0 +1,6 @@
+# Test-only set: no provider SDKs, no model weights, no paid APIs.
+# faiss-cpu is included so the REAL FAISS path is exercised (not faked).
+pytest>=8.0
+faiss-cpu>=1.8
+pypdf>=4.0
+python-docx>=1.1

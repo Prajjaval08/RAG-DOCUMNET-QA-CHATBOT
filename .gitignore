@@ -1,0 +1,35 @@
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+
+# Persisted user data and indexes (may contain sensitive document text)
+data/faiss_index/
+data/uploads/
+uploads/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+
+# Model and app caches
+.cache/
+.huggingface/
+sentence_transformers/
+.streamlit/
+
+# Test / lint caches
+.pytest_cache/
+.ruff_cache/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log
